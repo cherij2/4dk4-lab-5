@@ -81,8 +81,8 @@ output_results(Simulation_Run_Ptr simulation_run)
   // printf("Random Seed = %d \n", data->random_seed);
   // printf("Packet arrival count = %ld \n", data->arrival_count);
 
-  // xmtted_fraction = (double) data->number_of_packets_processed /
-  //   data->arrival_count;
+  xmtted_fraction = (double) data->number_of_packets_processed /
+    data->arrival_count;
 
   // printf("Transmitted packet count  = %ld (Service Fraction = %.5f)\n",
 	//  data->number_of_packets_processed, xmtted_fraction);
@@ -97,7 +97,7 @@ output_results(Simulation_Run_Ptr simulation_run)
     double loss_rate = (double)data->dropped_count / data->arrival_count;
   //   printf("Loss rate               = %.5f\n", loss_rate);
 
-  printf("%.5f, %.5f, %ld\n", data->queue_size, loss_rate, xmtted_fraction);
+  printf("%.5f, %.5f, %ld\n", xmtted_fraction, loss_rate, data->queue_size);
   }
 
   printf("\n");

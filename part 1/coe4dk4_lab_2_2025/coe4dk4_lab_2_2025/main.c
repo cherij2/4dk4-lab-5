@@ -64,7 +64,7 @@ main(void)
   int i=0;
 
   while ((queue_size = queue_sizes[i++]) != 0) {
-    printf("\n\n=== Queue Size: %.0f packets ===\n\n", queue_size);
+    // printf("\n\n=== Queue Size: %.0f packets ===\n\n", queue_size);
     data.buffer = fifoqueue_new();
     data.link   = server_new();
     data.queue_size = (int) queue_size;
