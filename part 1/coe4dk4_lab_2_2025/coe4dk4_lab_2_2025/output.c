@@ -77,20 +77,28 @@ output_results(Simulation_Run_Ptr simulation_run)
 
   data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
 
-  printf("\n");
-  printf("Random Seed = %d \n", data->random_seed);
-  printf("Packet arrival count = %ld \n", data->arrival_count);
+  // printf("\n");
+  // printf("Random Seed = %d \n", data->random_seed);
+  // printf("Packet arrival count = %ld \n", data->arrival_count);
 
-  xmtted_fraction = (double) data->number_of_packets_processed /
-    data->arrival_count;
+  // xmtted_fraction = (double) data->number_of_packets_processed /
+  //   data->arrival_count;
 
-  printf("Transmitted packet count  = %ld (Service Fraction = %.5f)\n",
-	 data->number_of_packets_processed, xmtted_fraction);
+  // printf("Transmitted packet count  = %ld (Service Fraction = %.5f)\n",
+	//  data->number_of_packets_processed, xmtted_fraction);
 
-  printf("Arrival rate = %.3f packets/second \n", (double) PACKET_ARRIVAL_RATE);
+  // printf("Arrival rate = %.3f packets/second \n", (double) PACKET_ARRIVAL_RATE);
 
-  printf("Mean Delay (msec) = %.2f \n",
-	 1e3*data->accumulated_delay/data->number_of_packets_processed);
+  // printf("Mean Delay (msec) = %.2f \n",
+	//  1e3*data->accumulated_delay/data->number_of_packets_processed);
+
+  // printf("Dropped packet count   = %ld\n", data->dropped_count);
+  if (data->arrival_count > 0) {
+    double loss_rate = (double)data->dropped_count / data->arrival_count;
+  //   printf("Loss rate               = %.5f\n", loss_rate);
+
+  printf("%.5f, %.5f, %ld\n", data->queue_size, loss_rate, xmtted_fraction);
+  }
 
   printf("\n");
 }
