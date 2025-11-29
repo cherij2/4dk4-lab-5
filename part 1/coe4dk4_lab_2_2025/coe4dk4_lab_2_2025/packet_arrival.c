@@ -79,11 +79,29 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
    * the buffer.
    */
 
-  if(server_state(data->link) == BUSY) {
-    fifoqueue_put(data->buffer, (void*) new_packet);
+  if (server_state(data->link) == BUSY) {
+    if (fifoqueue_size(data->buffer) >= data->queue_size) { /* or BUFFER_SIZE */
+      data->dropped_count++;
+      xfree(new_packet);
+    } else {
+      fifoqueue_put(data->buffer, (void*) new_packet);
+    }
   } else {
     start_transmission_on_link(simulation_run, new_packet, data->link);
   }
+
+  // if(server_state(data->link) == FREE) {
+  //   start_transmission_on_link(simulation_run, new_packet, data->link);
+  // } else {
+  //     if (fifoqueue_size(data->buffer) < data->queue_size) {
+  //       fifoqueue_put(data->buffer, (void*) new_packet);
+  //     } else {
+  //       data->dropped_count++;
+  //         xfree(new_packet);
+
+  //         return;
+  //     }  
+  // }
 
   /* 
    * Schedule the next packet arrival. Independent, exponentially distributed
