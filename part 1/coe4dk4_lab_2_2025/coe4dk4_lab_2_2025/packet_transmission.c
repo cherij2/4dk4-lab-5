@@ -38,6 +38,15 @@
  * event and is recovered in end_packet_transmission.c.
  */
 
+static double packet_xmt_time = PACKET_XMT_TIME;
+
+double get_packet_transmission_time(void) { return packet_xmt_time; }
+
+void set_packet_transmission_time(double packet_time_seconds) {
+  packet_xmt_time = packet_time_seconds;
+}
+
+
 long
 schedule_end_packet_transmission_event(Simulation_Run_Ptr simulation_run,
 				       double event_time,
@@ -126,10 +135,5 @@ start_transmission_on_link(Simulation_Run_Ptr simulation_run,
  * simparameters.h
  */
 
-double
-get_packet_transmission_time(void)
-{
-  return ((double) PACKET_XMT_TIME);
-}
 
 

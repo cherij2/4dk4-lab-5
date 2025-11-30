@@ -44,6 +44,7 @@ typedef struct _simulation_run_data_
   unsigned random_seed;
   int queue_size;
   long int dropped_count;
+  double packet_xmt_time;
 
 } Simulation_Run_Data, * Simulation_Run_Data_Ptr;
 

@@ -97,7 +97,7 @@ output_results(Simulation_Run_Ptr simulation_run)
     double loss_rate = (double)data->dropped_count / data->arrival_count;
   //   printf("Loss rate               = %.5f\n", loss_rate);
 
-  printf("%.5f, %.5f, %ld\n", xmtted_fraction, loss_rate, data->queue_size);
+  printf("%.5f, %.5f, %.5f\n", xmtted_fraction, loss_rate, data->packet_xmt_time);
   }
 
   printf("\n");
