@@ -45,6 +45,10 @@ end_packet_transmission_event(Simulation_Run_Ptr, void*);
 double
 get_packet_transmission_time(void);
 
+void 
+set_packet_transmission_time(double packet_time_seconds); 
+
+
 /******************************************************************************/
 
 #endif /* packet_transmission.h */
