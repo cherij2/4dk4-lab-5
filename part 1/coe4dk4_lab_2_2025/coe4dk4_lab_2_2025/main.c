@@ -29,6 +29,7 @@
 #include "simparameters.h"
 #include "packet_arrival.h"
 #include "packet_transmission.h"
+#include "clock_tick.h"
 #include "cleanup_memory.h"
 #include "trace.h"
 #include "main.h"
@@ -50,22 +51,26 @@ main(void)
   Simulation_Run_Ptr simulation_run;
   Simulation_Run_Data data;
 
-  /* Seeds, queue sizes (B), and transmission times (seconds/packet) to sweep. */
+  /* Seeds, queue sizes (B), transmission times (seconds/packet), and sweep parameters to sweep. */
   unsigned RANDOM_SEEDS[] = {RANDOM_SEED_LIST, 0};
   double queue_sizes[] = {QUEUE_SIZE_LIST, 0};
   double xmt_times[] = {PACKET_XMT_TIME, 0};
-  unsigned clock_tick_periods[] = {CLOCK_TICK_PERIOD, 0};
+  int n_values[] = {N_LIST, 0};
+  double clock_tick_periods[] = {CLOCK_TICK_PERIOD, 0};
 
   unsigned random_seed;
   double queue_size;
   double xmt_time;
-  double n;
+  int n;
+  double clock_tick_period;
 
-
-  int i = 0, j, k, l;
+  int i = 0, j, k, l, m, p;
 
   l = 0;
-  while((n = clock_tick_periods[l++]) != 0) {
+  while((n = n_values[l++]) != 0) {
+  
+  m = 0;
+  while((clock_tick_period = clock_tick_periods[m++]) != 0) {
   
   i = 0;
   while ((queue_size = queue_sizes[i++]) != 0) {
@@ -90,18 +95,22 @@ main(void)
         data.packet_xmt_time = xmt_time;
         data.n_malluable = n;
         data.n = n;
+        data.clock_tick_period = clock_tick_period;
 
         /* Create the packet buffer and transmission link. */
         data.buffer = fifoqueue_new();
+        data.token_buffer = fifoqueue_new();
         data.link   = server_new();
 
         /* Set per-run transmission time (service time). */
         set_packet_transmission_time(xmt_time);
 
-        /* Set RNG seed and schedule first arrival at t = 0. */
+        /* Set RNG seed and schedule first arrival and first clock tick at t = 0. */
         random_generator_initialize(random_seed);
         schedule_packet_arrival_event(simulation_run,
               simulation_run_get_time(simulation_run));
+        schedule_clock_tick_event(simulation_run,
+              simulation_run_get_time(simulation_run) + data.clock_tick_period);
 
         /* Execute events until finished. */
         while (data.number_of_packets_processed < RUNLENGTH) {
@@ -114,7 +123,8 @@ main(void)
       }
     }
   }
-}
+  }
+  }
 
   return 0;
 }

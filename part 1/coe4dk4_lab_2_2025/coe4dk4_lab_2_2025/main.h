@@ -36,6 +36,7 @@
 typedef struct _simulation_run_data_ 
 {
   Fifoqueue_Ptr buffer;
+  Fifoqueue_Ptr token_buffer;
   Server_Ptr link;
   long int blip_counter;
   long int arrival_count;
@@ -47,6 +48,8 @@ typedef struct _simulation_run_data_
   double packet_xmt_time;
   int n;
   int n_malluable;
+  double clock_tick_period;
+  int R;
 
 } Simulation_Run_Data, * Simulation_Run_Data_Ptr;
 
