@@ -64,8 +64,10 @@ main(void)
 
   int i = 0, j, k, l;
 
-  while((n = clock_tick_periods[l++]) != 0) {
   l = 0;
+  while((n = clock_tick_periods[l++]) != 0) {
+  
+  i = 0;
   while ((queue_size = queue_sizes[i++]) != 0) {
     data.queue_size = (int) queue_size;
 

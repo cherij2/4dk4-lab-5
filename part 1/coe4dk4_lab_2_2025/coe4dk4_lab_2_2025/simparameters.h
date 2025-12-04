@@ -43,7 +43,7 @@
 #define PACKET_XMT_TIME 1e-6 /* seconds per packet */
 #define BLIPRATE (RUNLENGTH/1000)
 
-#define CLOCK_TICK_PERIOD 2500,5000,7500,10000,15000,20000 /* in seconds */
+#define CLOCK_TICK_PERIOD 2500, 5000, 7500, 10000, 15000, 20000 /* in seconds */
 
 /******************************************************************************/
 

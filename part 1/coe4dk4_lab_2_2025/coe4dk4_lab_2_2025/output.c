@@ -73,7 +73,7 @@ void
 output_results(Simulation_Run_Ptr simulation_run)
 {
   Simulation_Run_Data_Ptr data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
-  // if (data->arrival_count == 0) return;
+  if (data->arrival_count == 0) return;
 
   double loss_rate = (double)data->dropped_count / data->arrival_count;
   double sim_time  = simulation_run_get_time(simulation_run);          /* seconds */

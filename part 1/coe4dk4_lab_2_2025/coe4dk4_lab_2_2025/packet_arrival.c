@@ -92,6 +92,7 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
     }
     else {
       data->n_malluable = data->n;
+      data->dropped_count++;
       xfree(new_packet);
     }
   }
