@@ -73,13 +73,13 @@ void
 output_results(Simulation_Run_Ptr simulation_run)
 {
   Simulation_Run_Data_Ptr data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
-  if (data->arrival_count == 0) return;
+  // if (data->arrival_count == 0) return;
 
   double loss_rate = (double)data->dropped_count / data->arrival_count;
   double sim_time  = simulation_run_get_time(simulation_run);          /* seconds */
   double throughput_pps = data->number_of_packets_processed / sim_time;
 
-  printf("%.6f, %.6f\n", throughput_pps, loss_rate);
+  printf("%d, %.6f, %.6f\n", data->n, throughput_pps, loss_rate);
 }
 
 

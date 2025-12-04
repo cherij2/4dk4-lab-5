@@ -62,7 +62,6 @@ schedule_packet_arrival_event(Simulation_Run_Ptr simulation_run,
  */
 
 static int packet_sizes[] = {500, 1000, 1500, 2000, 2500}; /* bits */
-int n = CLOCK_TICK_PERIOD;
 
 void
 packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
@@ -87,12 +86,12 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
   if (server_state(data->link) == BUSY) {
     fifoqueue_put(data->buffer, (void*) new_packet);
   } else {
-    if (n > new_packet->length) {
+    if (data->n_malluable > new_packet->length) {
       start_transmission_on_link(simulation_run, new_packet, data->link);
-      n -= new_packet->length;
+      data->n_malluable -= new_packet->length;
     }
     else {
-      n = CLOCK_TICK_PERIOD;
+      data->n_malluable = data->n;
       xfree(new_packet);
     }
   }

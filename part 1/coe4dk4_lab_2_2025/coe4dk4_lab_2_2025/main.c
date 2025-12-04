@@ -54,12 +54,18 @@ main(void)
   unsigned RANDOM_SEEDS[] = {RANDOM_SEED_LIST, 0};
   double queue_sizes[] = {QUEUE_SIZE_LIST, 0};
   double xmt_times[] = {PACKET_XMT_TIME, 0};
+  unsigned clock_tick_periods[] = {CLOCK_TICK_PERIOD, 0};
 
   unsigned random_seed;
   double queue_size;
   double xmt_time;
-  int i = 0, j, k;
+  double n;
 
+
+  int i = 0, j, k, l;
+
+  while((n = clock_tick_periods[l++]) != 0) {
+  l = 0;
   while ((queue_size = queue_sizes[i++]) != 0) {
     data.queue_size = (int) queue_size;
 
@@ -80,6 +86,8 @@ main(void)
         data.random_seed = random_seed;
         data.dropped_count = 0;
         data.packet_xmt_time = xmt_time;
+        data.n_malluable = n;
+        data.n = n;
 
         /* Create the packet buffer and transmission link. */
         data.buffer = fifoqueue_new();
@@ -104,6 +112,7 @@ main(void)
       }
     }
   }
+}
 
   return 0;
 }
