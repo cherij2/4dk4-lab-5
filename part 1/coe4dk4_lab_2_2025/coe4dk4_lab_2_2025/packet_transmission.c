@@ -37,9 +37,12 @@
  * in packet_transmissionl.c) is executed. A packet object is attached to the
  * event and is recovered in end_packet_transmission.c.
  */
+// Simulation_Run_Data_Ptr data;
+// Simulation_Run_Ptr simulation_run;
+// data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
+// static double packet_xmt_time = data->xmt_time;
 
-static double packet_xmt_time = PACKET_XMT_TIME;
-
+static double packet_xmt_time = 1e-3; /* default value */
 double get_packet_transmission_time(void) { return packet_xmt_time; }
 
 void set_packet_transmission_time(double packet_time_seconds) {

@@ -53,7 +53,7 @@ main(void)
   /* Seeds, queue sizes (B), and transmission times (seconds/packet) to sweep. */
   unsigned RANDOM_SEEDS[] = {RANDOM_SEED_LIST, 0};
   double queue_sizes[] = {QUEUE_SIZE_LIST, 0};
-  double xmt_times[] = {PACKET_XMT_TIME_LIST, 0};
+  double xmt_times[] = {PACKET_XMT_TIME, 0};
 
   unsigned random_seed;
   double queue_size;
