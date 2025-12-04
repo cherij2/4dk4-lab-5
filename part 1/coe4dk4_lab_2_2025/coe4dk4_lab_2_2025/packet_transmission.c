@@ -46,6 +46,42 @@ void set_packet_transmission_time(double packet_time_seconds) {
   packet_xmt_time = packet_time_seconds;
 }
 
+long
+schedule_bucket_tick_event(Simulation_Run_Ptr simulation_run, double event_time)
+{
+  Event event;
+  event.description = "Bucket Tick";
+  event.function = bucket_tick_event;
+  event.attachment = NULL;
+
+  return simulation_run_schedule_event(simulation_run, event, event_time);
+}
+
+void 
+bucket_tick_event(Simulation_Run_Ptr simulation_run, void *ignored)
+{
+  Simulation_Run_Data_Ptr data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
+  long bits_left = data->bits_per_tick;
+
+  while (fifoqueue_size(data->buffer) > 0) {
+    Packet_Ptr pkt = (Packet_Ptr) fifoqueue_see_front(data->buffer);
+    if (pkt->length_bits <= bits_left) {
+      fifoqueue_get(data->buffer);               /* pop */
+      bits_left -= pkt->length_bits;
+      data->number_of_packets_processed++;
+      data->accumulated_delay += simulation_run_get_time(simulation_run) - pkt->arrive_time;
+      data->bits_sent += pkt->length_bits;
+      xfree(pkt);
+    } else {
+      break; /* not enough bits left this tick */
+    }
+  }
+
+  schedule_bucket_tick_event(simulation_run, simulation_run_get_time(simulation_run) + data->tick_period);
+}
+
+
+
 
 long
 schedule_end_packet_transmission_event(Simulation_Run_Ptr simulation_run,

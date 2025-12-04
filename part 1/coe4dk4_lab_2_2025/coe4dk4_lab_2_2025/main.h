@@ -45,6 +45,9 @@ typedef struct _simulation_run_data_
   int queue_size;
   long int dropped_count;
   double packet_xmt_time;
+  double tick_period;
+  long bits_per_tick;
+  double bits_sent;
 
 } Simulation_Run_Data, * Simulation_Run_Data_Ptr;
 
@@ -57,6 +60,7 @@ typedef struct _packet_
   int source_id;
   int destination_id;
   Packet_Status status;
+  long length_bits;
 } Packet, * Packet_Ptr;
 
 /*

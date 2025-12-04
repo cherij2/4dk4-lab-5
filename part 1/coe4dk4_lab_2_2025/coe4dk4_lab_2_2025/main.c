@@ -53,9 +53,12 @@ main(void)
   /* Seeds, queue sizes (B), and transmission times (seconds/packet) to sweep. */
   unsigned RANDOM_SEEDS[] = {RANDOM_SEED_LIST, 0};
   double queue_sizes[] = {QUEUE_SIZE_LIST, 0};
-  double xmt_times[] = {PACKET_XMT_TIME_LIST, 0};
+  double tick_periods[] = {TICK_PERIOD_LIST, 0};
+  double link_rates[] = {LINK_RATE_LIST, 0};
 
   unsigned random_seed;
+  double link_rate;
+  double tick_period;
   double queue_size;
   double xmt_time;
   int i = 0, j, k;
@@ -64,46 +67,48 @@ main(void)
     data.queue_size = (int) queue_size;
 
     k = 0;
-    while ((xmt_time = xmt_times[k++]) != 0) {
+    double tick_period;
+    while ((tick_period = tick_periods[k++]) != 0) {
 
-      j = 0; /* reset seeds for each transmission time */
-      while ((random_seed = RANDOM_SEEDS[j++]) != 0) {
+      int r = 0;
+      double link_rate;
+      while ((link_rate = link_rates[r++]) != 0) {
 
-        simulation_run = simulation_run_new(); /* Create a new simulation run. */
-        simulation_run_attach_data(simulation_run, (void *) &data);
+        j = 0;
+        while ((random_seed = RANDOM_SEEDS[j++]) != 0) {
 
-        /* Initialize per-run stats. */
-        data.blip_counter = 0;
-        data.arrival_count = 0;
-        data.number_of_packets_processed = 0;
-        data.accumulated_delay = 0.0;
-        data.random_seed = random_seed;
-        data.dropped_count = 0;
-        data.packet_xmt_time = xmt_time;
+          simulation_run = simulation_run_new();
+          simulation_run_attach_data(simulation_run, (void *) &data);
 
-        /* Create the packet buffer and transmission link. */
-        data.buffer = fifoqueue_new();
-        data.link   = server_new();
+          data.blip_counter = 0;
+          data.arrival_count = 0;
+          data.number_of_packets_processed = 0;
+          data.accumulated_delay = 0.0;
+          data.random_seed = random_seed;
+          data.dropped_count = 0;
+          data.bits_sent = 0.0;
+          data.tick_period = tick_period;
+          data.bits_per_tick = (long)(link_rate * tick_period);
+          data.packet_xmt_time = 0.0; /* unused for part 2 */
 
-        /* Set per-run transmission time (service time). */
-        set_packet_transmission_time(xmt_time);
+          data.buffer = fifoqueue_new();
+          data.link   = server_new(); /* unused */
 
-        /* Set RNG seed and schedule first arrival at t = 0. */
-        random_generator_initialize(random_seed);
-        schedule_packet_arrival_event(simulation_run,
-              simulation_run_get_time(simulation_run));
+          random_generator_initialize(random_seed);
 
-        /* Execute events until finished. */
-        while (data.number_of_packets_processed < RUNLENGTH) {
-          simulation_run_execute_event(simulation_run);
+          /* Schedule first arrival and first bucket tick */
+          schedule_packet_arrival_event(simulation_run,
+                simulation_run_get_time(simulation_run));
+          schedule_bucket_tick_event(simulation_run,
+                simulation_run_get_time(simulation_run));
+
+          while (data.number_of_packets_processed < RUNLENGTH) {
+            simulation_run_execute_event(simulation_run);
+          }
+
+          output_results(simulation_run);
+          cleanup_memory(simulation_run);
         }
-
-        /* Output results and clean up. */
-        output_results(simulation_run);
-        cleanup_memory(simulation_run);
       }
     }
   }
-
-  return 0;
-}

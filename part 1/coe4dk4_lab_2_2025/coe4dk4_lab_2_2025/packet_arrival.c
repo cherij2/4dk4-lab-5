@@ -60,57 +60,33 @@ schedule_packet_arrival_event(Simulation_Run_Ptr simulation_run,
  * packet. It then schedules the next packet arrival event.
  */
 
-void
-packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
-{
-  Simulation_Run_Data_Ptr data;
-  Packet_Ptr new_packet;
+static const long packet_sizes[] = {PACKET_SIZE_LIST, 0};
 
-  data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
+void
+packet_arrival_event(Simulation_Run_Ptr simulation_run, void *ptr)
+{
+  Simulation_Run_Data_Ptr data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
   data->arrival_count++;
 
-  new_packet = (Packet_Ptr) xmalloc(sizeof(Packet));
+  Packet_Ptr new_packet = (Packet_Ptr) xmalloc(sizeof(Packet));
   new_packet->arrive_time = simulation_run_get_time(simulation_run);
-  new_packet->service_time = get_packet_transmission_time();
+  /* Uniform pick from packet_sizes[] */
+  int idx = (int)(uniform_generator() * 5); /* 5 sizes */
+  if (idx < 0) idx = 0; if (idx > 4) idx = 4;
+  new_packet->length_bits = packet_sizes[idx];
+  new_packet->service_time = 0.0;
   new_packet->status = WAITING;
 
-  /* 
-   * Start transmission if the data link is free. Otherwise put the packet into
-   * the buffer.
-   */
-
-  if (server_state(data->link) == BUSY) {
-    if (fifoqueue_size(data->buffer) >= data->queue_size) { /* or BUFFER_SIZE */
-      data->dropped_count++;
-      xfree(new_packet);
-    } else {
-      fifoqueue_put(data->buffer, (void*) new_packet);
-    }
+  if (fifoqueue_size(data->buffer) >= data->queue_size) {
+    data->dropped_count++;
+    xfree(new_packet);
   } else {
-    start_transmission_on_link(simulation_run, new_packet, data->link);
+    fifoqueue_put(data->buffer, (void*) new_packet);
   }
 
-  // if(server_state(data->link) == FREE) {
-  //   start_transmission_on_link(simulation_run, new_packet, data->link);
-  // } else {
-  //     if (fifoqueue_size(data->buffer) < data->queue_size) {
-  //       fifoqueue_put(data->buffer, (void*) new_packet);
-  //     } else {
-  //       data->dropped_count++;
-  //         xfree(new_packet);
-
-  //         return;
-  //     }  
-  // }
-
-  /* 
-   * Schedule the next packet arrival. Independent, exponentially distributed
-   * interarrival times gives us Poisson process arrivals.
-   */
-
   schedule_packet_arrival_event(simulation_run,
-			simulation_run_get_time(simulation_run) +
-			exponential_generator((double) 1/PACKET_ARRIVAL_RATE));
+        simulation_run_get_time(simulation_run) +
+        exponential_generator((double)1 / PACKET_ARRIVAL_RATE));
 }
 
 
