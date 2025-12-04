@@ -56,6 +56,7 @@ typedef struct _packet_
   double service_time;
   int source_id;
   int destination_id;
+  int length; /* in bits */
   Packet_Status status;
 } Packet, * Packet_Ptr;
 

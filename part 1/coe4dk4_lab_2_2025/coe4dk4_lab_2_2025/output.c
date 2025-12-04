@@ -79,7 +79,7 @@ output_results(Simulation_Run_Ptr simulation_run)
   double sim_time  = simulation_run_get_time(simulation_run);          /* seconds */
   double throughput_pps = data->number_of_packets_processed / sim_time;
 
-  printf("%.6f, %.6f, %.6f\n", 1.0/(double)(data->packet_xmt_time), throughput_pps, loss_rate);
+  printf("%.6f, %.6f\n", throughput_pps, loss_rate);
 }
 
 

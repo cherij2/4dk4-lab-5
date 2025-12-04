@@ -39,8 +39,11 @@
 /* Comma separated list of random seeds to run. */
 #define RANDOM_SEED_LIST 400343389, 400381481
 
-#define PACKET_XMT_TIME 2.5e-3, 3e-3, 6e-3, 9e-3, 12e-3, 15e-3, 20e-3, 25e-3, 30e-3
+
+#define PACKET_XMT_TIME 1e-6 /* seconds per packet */
 #define BLIPRATE (RUNLENGTH/1000)
+
+#define CLOCK_TICK_PERIOD 5e3 /* in seconds */
 
 /******************************************************************************/
 

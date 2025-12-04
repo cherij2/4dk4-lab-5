@@ -38,6 +38,7 @@
  * can be recovered in packet_arrival.c.
  */
 
+
 long int
 schedule_packet_arrival_event(Simulation_Run_Ptr simulation_run,
 			      double event_time)
@@ -60,6 +61,9 @@ schedule_packet_arrival_event(Simulation_Run_Ptr simulation_run,
  * packet. It then schedules the next packet arrival event.
  */
 
+static int packet_sizes[] = {500, 1000, 1500, 2000, 2500}; /* bits */
+int n = CLOCK_TICK_PERIOD;
+
 void
 packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
 {
@@ -70,6 +74,7 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
   data->arrival_count++;
 
   new_packet = (Packet_Ptr) xmalloc(sizeof(Packet));
+  new_packet->length = packet_sizes[rand() % 5]; /* bits */
   new_packet->arrive_time = simulation_run_get_time(simulation_run);
   new_packet->service_time = get_packet_transmission_time();
   new_packet->status = WAITING;
@@ -78,16 +83,18 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
    * Start transmission if the data link is free. Otherwise put the packet into
    * the buffer.
    */
-
+  
   if (server_state(data->link) == BUSY) {
-    if (fifoqueue_size(data->buffer) >= data->queue_size) { /* or BUFFER_SIZE */
-      data->dropped_count++;
-      xfree(new_packet);
-    } else {
-      fifoqueue_put(data->buffer, (void*) new_packet);
-    }
+    fifoqueue_put(data->buffer, (void*) new_packet);
   } else {
-    start_transmission_on_link(simulation_run, new_packet, data->link);
+    if (n > new_packet->length) {
+      start_transmission_on_link(simulation_run, new_packet, data->link);
+      n -= new_packet->length;
+    }
+    else {
+      n = CLOCK_TICK_PERIOD;
+      xfree(new_packet);
+    }
   }
 
   // if(server_state(data->link) == FREE) {
