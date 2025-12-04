@@ -58,7 +58,7 @@ output_progress_msg_to_screen(Simulation_Run_Ptr simulation_run)
 
     printf("Successfully Xmtted Pkts  = %ld (Arrived Pkts = %ld) \r", 
 	   data->number_of_packets_processed, data->arrival_count);
-
+    
     fflush(stdout);
   }
 
@@ -72,35 +72,14 @@ output_progress_msg_to_screen(Simulation_Run_Ptr simulation_run)
 void
 output_results(Simulation_Run_Ptr simulation_run)
 {
-  double xmtted_fraction;
-  Simulation_Run_Data_Ptr data;
+  Simulation_Run_Data_Ptr data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
+  if (data->arrival_count == 0) return;
 
-  data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
+  double loss_rate = (double)data->dropped_count / data->arrival_count;
+  double sim_time  = simulation_run_get_time(simulation_run);          /* seconds */
+  double throughput_pps = data->number_of_packets_processed / sim_time;
 
-  // printf("\n");
-  // printf("Random Seed = %d \n", data->random_seed);
-  // printf("Packet arrival count = %ld \n", data->arrival_count);
-
-  xmtted_fraction = (double) data->number_of_packets_processed /
-    data->arrival_count;
-
-  // printf("Transmitted packet count  = %ld (Service Fraction = %.5f)\n",
-	//  data->number_of_packets_processed, xmtted_fraction);
-
-  // printf("Arrival rate = %.3f packets/second \n", (double) PACKET_ARRIVAL_RATE);
-
-  // printf("Mean Delay (msec) = %.2f \n",
-	//  1e3*data->accumulated_delay/data->number_of_packets_processed);
-
-  // printf("Dropped packet count   = %ld\n", data->dropped_count);
-  if (data->arrival_count > 0) {
-    double loss_rate = (double)data->dropped_count / data->arrival_count;
-  //   printf("Loss rate               = %.5f\n", loss_rate);
-
-  printf("%.5f, %.5f, %.5f\n", xmtted_fraction, loss_rate, data->packet_xmt_time);
-  }
-
-  printf("\n");
+  printf("%d, %.6f, %.6f\n", data->queue_size, throughput_pps, loss_rate);
 }
 
 

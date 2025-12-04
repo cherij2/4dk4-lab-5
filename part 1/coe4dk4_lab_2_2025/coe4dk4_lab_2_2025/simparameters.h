@@ -28,19 +28,18 @@
 
 /******************************************************************************/
 
-#define PACKET_ARRIVAL_RATE 100 /* packets per second */
+#define PACKET_ARRIVAL_RATE 1200 /* packets per second */
 // #define PACKET_LENGTH 1e3 /* bits */
 // #define LINK_BIT_RATE 1e6 /* bits per second */
-#define RUNLENGTH 10e6 /* packets */
-#define QUEUE_SIZE_LIST 3
+#define RUNLENGTH 10e5 /* packets */
+#define QUEUE_SIZE_LIST 3 
 #define BUFFER_SIZE 50 /* max packets waiting in queue */
 
 
 /* Comma separated list of random seeds to run. */
 #define RANDOM_SEED_LIST 400343389, 400381481
 
-#define PACKET_XMT_TIME 1e-3
-#define PACKET_XMT_TIME_LIST 1e-3, 3e-3, 6e-3, 9e-3, 12e-3, 15e-3
+#define PACKET_XMT_TIME 1e-4, 5e-4, 1e-3, 3e-3, 6e-3, 9e-3, 12e-3, 15e-3
 #define BLIPRATE (RUNLENGTH/1000)
 
 /******************************************************************************/
