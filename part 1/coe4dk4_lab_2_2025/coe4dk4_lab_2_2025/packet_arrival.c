@@ -79,24 +79,32 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
   new_packet->status = WAITING;
 
   /* 
-   * Start transmission if the data link is free. Otherwise put the packet into
-   * the buffer.
+   * Start transmission if the data link is free and we have enough capacity.
+   * Otherwise put the packet into the buffer if there's room.
    */
   
-  if (server_state(data->link) == BUSY) {
-  if (fifoqueue_size(data->buffer) < data->queue_size) {
-    fifoqueue_put(data->buffer, (void*) new_packet);
+  if (server_state(data->link) == FREE) {
     if (data->n_malluable > new_packet->length) {
       start_transmission_on_link(simulation_run, new_packet, data->link);
       data->n_malluable -= new_packet->length;
+    } else {
+      /* Not enough capacity, queue it */
+      if (fifoqueue_size(data->buffer) < data->queue_size) {
+        fifoqueue_put(data->buffer, (void*) new_packet);
+      } else {
+        xfree(new_packet);
+        data->dropped_count++;
+      }
     }
-  } 
-  else {
-    xfree(new_packet);
-    data->dropped_count++;
+  } else {
+    /* Link is busy, queue the packet if there's room */
+    if (fifoqueue_size(data->buffer) < data->queue_size) {
+      fifoqueue_put(data->buffer, (void*) new_packet);
+    } else {
+      xfree(new_packet);
+      data->dropped_count++;
     }
-      
-    }
+  }
   
 
   // if(server_state(data->link) == FREE) {
