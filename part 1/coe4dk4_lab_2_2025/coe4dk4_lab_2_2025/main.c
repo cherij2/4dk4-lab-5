@@ -51,41 +51,27 @@ main(void)
   Simulation_Run_Ptr simulation_run;
   Simulation_Run_Data data;
 
-  /* Seeds, queue sizes (B), transmission times (seconds/packet), and sweep parameters to sweep. */
+  /* Seeds, queue sizes, and token queue sizes to sweep. */
   unsigned RANDOM_SEEDS[] = {RANDOM_SEED_LIST, 0};
   double queue_sizes[] = {QUEUE_SIZE_LIST, 0};
-  // double token_queue_sizes[] = {TOKEN_QUEUE_SIZE_LIST, 0};
-  double xmt_times[] = {PACKET_XMT_TIME, 0};
-  int n_values[] = {N_LIST, 0};
-  double clock_tick_periods[] = {CLOCK_TICK_PERIOD, 0};
+  double token_queue_sizes[] = {TOKEN_QUEUE_SIZE_LIST, 0};
 
   unsigned random_seed;
   double queue_size;
-  // double token_queue_size;
-  double xmt_time;
-  int n;
-  double clock_tick_period;
+  double token_queue_size;
 
-  int i = 0, j, k, l, m, p;
+  int i = 0, j, k;
 
-  l = 0;
-  while((n = n_values[l++]) != 0) {
-  
-  m = 0;
-  while((clock_tick_period = clock_tick_periods[m++]) != 0) {
-  
-  // p = 0;
-  // while ((token_queue_size = token_queue_sizes[p++]) != 0) {
-  //   data.token_queue_size = (int) token_queue_size;
   i = 0;
-  while ((queue_size = queue_sizes[i++]) != 0) {
-    data.queue_size = (int) queue_size;
+  while ((token_queue_size = token_queue_sizes[i++]) != 0) {
+    data.token_queue_size = (int) token_queue_size;
 
-    k = 0;
-    while ((xmt_time = xmt_times[k++]) != 0) {
+    j = 0;
+    while ((queue_size = queue_sizes[j++]) != 0) {
+      data.queue_size = (int) queue_size;
 
-      j = 0; /* reset seeds for each transmission time */
-      while ((random_seed = RANDOM_SEEDS[j++]) != 0) {
+      k = 0; /* reset seeds for each queue configuration */
+      while ((random_seed = RANDOM_SEEDS[k++]) != 0) {
 
         simulation_run = simulation_run_new(); /* Create a new simulation run. */
         simulation_run_attach_data(simulation_run, (void *) &data);
@@ -97,10 +83,10 @@ main(void)
         data.accumulated_delay = 0.0;
         data.random_seed = random_seed;
         data.dropped_count = 0;
-        data.packet_xmt_time = xmt_time;
-        data.n_malluable = n;
-        data.n = n;
-        data.clock_tick_period = clock_tick_period;
+        // data.packet_xmt_time = xmt_time;
+        // data.n_malluable = n;
+        // data.n = n;
+        // data.clock_tick_period = clock_tick_period;
 
         /* Create the packet buffer and transmission link. */
         data.buffer = fifoqueue_new();
@@ -108,14 +94,14 @@ main(void)
         data.link   = server_new();
 
         /* Set per-run transmission time (service time). */
-        set_packet_transmission_time(xmt_time);
+        // set_packet_transmission_time(xmt_time);
 
-        /* Set RNG seed and schedule first arrival and first clock tick at t = 0. */
+        /* Set RNG seed and schedule first arrival at t = 0. */
         random_generator_initialize(random_seed);
         schedule_packet_arrival_event(simulation_run,
               simulation_run_get_time(simulation_run));
-        schedule_clock_tick_event(simulation_run,
-              simulation_run_get_time(simulation_run) + data.clock_tick_period);
+        // schedule_clock_tick_event(simulation_run,
+        //       simulation_run_get_time(simulation_run) + data.clock_tick_period);
 
         /* Execute events until finished. */
         while (data.number_of_packets_processed < RUNLENGTH) {
@@ -128,9 +114,6 @@ main(void)
       }
     }
   }
-  // }
-  }
-}
 
   return 0;
 }

@@ -32,8 +32,6 @@
 // #define PACKET_LENGTH 1e3 /* bits */
 // #define LINK_BIT_RATE 1e6 /* bits per second */
 #define RUNLENGTH 10e5 /* packets */
-#define QUEUE_SIZE_LIST 10
-#define TOKEN_QUEUE_SIZE_LIST 3 
 #define BUFFER_SIZE 50 /* max packets waiting in queue */
 
 
@@ -44,8 +42,8 @@
 #define PACKET_XMT_TIME 2.5e-3, 3e-3, 6e-3, 9e-3, 12e-3, 15e-3, 20e-3  /* seconds per packet */
 #define BLIPRATE (RUNLENGTH/1000)
 
-#define N_LIST 2500, 5000, 7500, 10000, 15000, 20000 /* bucket capacity in bits */
-#define CLOCK_TICK_PERIOD 0.01, 0.02, 0.04, 0.08, 0.12, 0.16, 0.24, 0.3 /* in microseconds */
+#define QUEUE_SIZE_LIST 10
+#define TOKEN_QUEUE_SIZE_LIST 2500, 5000, 7500, 10000, 15000, 20000 /* bucket capacity in bits */
 
 /******************************************************************************/
 
