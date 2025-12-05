@@ -54,12 +54,14 @@ main(void)
   /* Seeds, queue sizes (B), transmission times (seconds/packet), and sweep parameters to sweep. */
   unsigned RANDOM_SEEDS[] = {RANDOM_SEED_LIST, 0};
   double queue_sizes[] = {QUEUE_SIZE_LIST, 0};
+  double token_queue_sizes[] = {TOKEN_QUEUE_SIZE_LIST, 0};
   double xmt_times[] = {PACKET_XMT_TIME, 0};
   int n_values[] = {N_LIST, 0};
   double clock_tick_periods[] = {CLOCK_TICK_PERIOD, 0};
 
   unsigned random_seed;
   double queue_size;
+  double token_queue_size;
   double xmt_time;
   int n;
   double clock_tick_period;
@@ -72,6 +74,9 @@ main(void)
   m = 0;
   while((clock_tick_period = clock_tick_periods[m++]) != 0) {
   
+  // p = 0;
+  // while ((token_queue_size = token_queue_sizes[p++]) != 0) {
+  //   data.token_queue_size = (int) token_queue_size;
   i = 0;
   while ((queue_size = queue_sizes[i++]) != 0) {
     data.queue_size = (int) queue_size;
@@ -123,8 +128,9 @@ main(void)
       }
     }
   }
+  // }
   }
-  }
+}
 
   return 0;
 }

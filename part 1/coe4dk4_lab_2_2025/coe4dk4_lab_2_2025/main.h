@@ -44,12 +44,12 @@ typedef struct _simulation_run_data_
   double accumulated_delay;
   unsigned random_seed;
   int queue_size;
+  int token_queue_size;
   long int dropped_count;
   double packet_xmt_time;
   int n;
   int n_malluable;
   double clock_tick_period;
-  int R;
 
 } Simulation_Run_Data, * Simulation_Run_Data_Ptr;
 

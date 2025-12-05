@@ -84,18 +84,20 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
    */
   
   if (server_state(data->link) == BUSY) {
+  if (fifoqueue_size(data->buffer) < data->queue_size) {
     fifoqueue_put(data->buffer, (void*) new_packet);
-  } else {
     if (data->n_malluable > new_packet->length) {
       start_transmission_on_link(simulation_run, new_packet, data->link);
       data->n_malluable -= new_packet->length;
     }
-    else {
-      data->n_malluable = data->n;
-      data->dropped_count++;
-      xfree(new_packet);
+  } 
+  else {
+    xfree(new_packet);
+    data->dropped_count++;
     }
-  }
+      
+    }
+  
 
   // if(server_state(data->link) == FREE) {
   //   start_transmission_on_link(simulation_run, new_packet, data->link);
