@@ -29,7 +29,7 @@
 #include "simparameters.h"
 #include "packet_arrival.h"
 #include "packet_transmission.h"
-#include "clock_tick.h"
+#include "token_arr.h"
 #include "cleanup_memory.h"
 #include "trace.h"
 #include "main.h"
@@ -51,16 +51,18 @@ main(void)
   Simulation_Run_Ptr simulation_run;
   Simulation_Run_Data data;
 
-  /* Seeds, queue sizes, and token queue sizes to sweep. */
+  /* Seeds, queue sizes, token queue sizes, and token rates to sweep. */
   unsigned RANDOM_SEEDS[] = {RANDOM_SEED_LIST, 0};
   double queue_sizes[] = {QUEUE_SIZE_LIST, 0};
   double token_queue_sizes[] = {TOKEN_QUEUE_SIZE_LIST, 0};
+  // double token_rates[] = {TOKEN_RATE_LIST, 0};
 
   unsigned random_seed;
   double queue_size;
   double token_queue_size;
+  // double token_rate;
 
-  int i = 0, j, k;
+  int i = 0, j, k, l;
 
   i = 0;
   while ((token_queue_size = token_queue_sizes[i++]) != 0) {
@@ -70,8 +72,12 @@ main(void)
     while ((queue_size = queue_sizes[j++]) != 0) {
       data.queue_size = (int) queue_size;
 
-      k = 0; /* reset seeds for each queue configuration */
-      while ((random_seed = RANDOM_SEEDS[k++]) != 0) {
+      // k = 0;
+      // while ((token_rate = token_rates[k++]) != 0) {
+      //   data.token_interval = 1.0 / token_rate; /* Convert rate to interval */
+
+        l = 0; /* reset seeds for each configuration */
+        while ((random_seed = RANDOM_SEEDS[l++]) != 0) {
 
         simulation_run = simulation_run_new(); /* Create a new simulation run. */
         simulation_run_attach_data(simulation_run, (void *) &data);
@@ -100,6 +106,8 @@ main(void)
         random_generator_initialize(random_seed);
         schedule_packet_arrival_event(simulation_run,
               simulation_run_get_time(simulation_run));
+        schedule_token_arrival_event(simulation_run,
+              simulation_run_get_time(simulation_run));
         // schedule_clock_tick_event(simulation_run,
         //       simulation_run_get_time(simulation_run) + data.clock_tick_period);
 
@@ -114,6 +122,7 @@ main(void)
       }
     }
   }
+  
 
   return 0;
 }

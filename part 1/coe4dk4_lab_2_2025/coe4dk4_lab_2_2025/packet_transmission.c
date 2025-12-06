@@ -101,12 +101,15 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * link)
   xfree((void *) this_packet);
 
   /* 
-   * See if there is are packets waiting in the buffer. If so, take the next one
-   * out and transmit it immediately.
+   * See if there are packets waiting in the buffer. If so, and if we have a
+   * token available, take the next one out and transmit it immediately.
   */
 
-  if(fifoqueue_size(data->buffer) > 0) {
+  if ((fifoqueue_size(data->buffer) > 0) && 
+      (fifoqueue_size(data->token_buffer) > 0)) {
     next_packet = (Packet_Ptr) fifoqueue_get(data->buffer);
+    int *token = (int *) fifoqueue_get(data->token_buffer);
+    xfree(token);
     start_transmission_on_link(simulation_run, next_packet, link);
   }
 }

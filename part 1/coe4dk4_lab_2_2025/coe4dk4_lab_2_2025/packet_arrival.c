@@ -61,7 +61,7 @@ schedule_packet_arrival_event(Simulation_Run_Ptr simulation_run,
  * packet. It then schedules the next packet arrival event.
  */
 
-static int packet_sizes[] = {500, 1000, 1500, 2000, 2500}; /* bits */
+static int packet_sizes = 1500; /* bits */
 
 void
 packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
@@ -73,7 +73,7 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
   data->arrival_count++;
 
   new_packet = (Packet_Ptr) xmalloc(sizeof(Packet));
-  new_packet->length = packet_sizes[rand() % 5]; /* bits */
+  new_packet->length = packet_sizes; /* bits */
   new_packet->arrive_time = simulation_run_get_time(simulation_run);
   new_packet->service_time = get_packet_transmission_time();
   new_packet->status = WAITING;

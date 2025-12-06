@@ -29,6 +29,7 @@
 /******************************************************************************/
 
 #define PACKET_ARRIVAL_RATE 100 /* packets per second */
+#define TOKEN_RATE_LIST 100, 150, 200, 250, 300, 350, 400 /* tokens per second */
 // #define PACKET_LENGTH 1e3 /* bits */
 // #define LINK_BIT_RATE 1e6 /* bits per second */
 #define RUNLENGTH 10e5 /* packets */
@@ -39,11 +40,11 @@
 #define RANDOM_SEED_LIST 400343389, 400381481
 
 
-#define PACKET_XMT_TIME 2.5e-3, 3e-3, 6e-3, 9e-3, 12e-3, 15e-3, 20e-3  /* seconds per packet */
+#define PACKET_XMT_TIME 1e-3 /* seconds per packet */
 #define BLIPRATE (RUNLENGTH/1000)
 
 #define QUEUE_SIZE_LIST 10
-#define TOKEN_QUEUE_SIZE_LIST 2500, 5000, 7500, 10000, 15000, 20000 /* bucket capacity in bits */
+#define TOKEN_QUEUE_SIZE_LIST 5, 10, 15, 20 /* token queue capacity */
 
 /******************************************************************************/
 

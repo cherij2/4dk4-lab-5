@@ -1,4 +1,3 @@
-
 /*
  * 
  * Simulation_Run of A Single Server Queueing System
@@ -23,44 +22,25 @@
 
 /******************************************************************************/
 
+#ifndef _TOKEN_GEN_H_
+#define _TOKEN_GEN_H_
+
+/******************************************************************************/
+
 #include "simlib.h"
-#include "main.h"
-#include "cleanup_memory.h"
 
 /******************************************************************************/
 
 /*
- * When a simulation_run run is finished, this function cleans up the memory
- * that has been allocated.
+ * Function prototypes
  */
 
 void
-cleanup_memory (Simulation_Run_Ptr simulation_run)
-{
-  Simulation_Run_Data_Ptr data;
-  Fifoqueue_Ptr buffer;
-  Fifoqueue_Ptr token_buffer;
-  Server_Ptr link;
+token_arrival_event(Simulation_Run_Ptr, void*);
 
-  data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
-  buffer = data->buffer;
-  token_buffer = data->token_buffer;
-  link = data->link;
+long
+schedule_token_arrival_event(Simulation_Run_Ptr, double);
 
-  if(link->state == BUSY) /* Clean out the server. */
-    xfree(server_get(link));
-  xfree(link);
+/******************************************************************************/
 
-  while (fifoqueue_size(buffer) > 0) /* Clean out the queue. */
-    xfree(fifoqueue_get(buffer));
-  xfree(buffer);
-
-  while (fifoqueue_size(token_buffer) > 0) /* Clean out the token buffer. */
-    xfree(fifoqueue_get(token_buffer));
-  xfree(token_buffer);
-
-  simulation_run_free_memory(simulation_run); /* Clean up the simulation_run. */
-}
-
-
-
+#endif /* token_gen.h */

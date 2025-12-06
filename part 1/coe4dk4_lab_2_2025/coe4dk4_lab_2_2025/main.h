@@ -50,6 +50,7 @@ typedef struct _simulation_run_data_
   int n;
   int n_malluable;
   double clock_tick_period;
+  double token_interval;
 
 } Simulation_Run_Data, * Simulation_Run_Data_Ptr;
 
@@ -64,6 +65,18 @@ typedef struct _packet_
   int length; /* in bits */
   Packet_Status status;
 } Packet, * Packet_Ptr;
+
+
+typedef struct _token_ 
+{
+  double arrive_time;
+  double service_time;
+  int source_id;
+  int destination_id;
+  int length; /* in bits */
+  int data_allowed; //the number of packets that can transmit with 1 token.
+  Packet_Status status;
+} Token, * Token_Ptr;
 
 /*
  * Function prototypes

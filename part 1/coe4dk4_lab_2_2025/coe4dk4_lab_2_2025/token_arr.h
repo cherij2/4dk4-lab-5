@@ -22,8 +22,8 @@
 
 /******************************************************************************/
 
-#ifndef _CLOCK_TICK_H_
-#define _CLOCK_TICK_H_
+#ifndef _TOKEN_GEN_H_
+#define _TOKEN_GEN_H_
 
 /******************************************************************************/
 
@@ -36,11 +36,11 @@
  */
 
 void
-clock_tick_event(Simulation_Run_Ptr, void*);
+token_arrival_event(Simulation_Run_Ptr, void*);
 
 long
-schedule_clock_tick_event(Simulation_Run_Ptr, double);
+schedule_token_arrival_event(Simulation_Run_Ptr, double);
 
 /******************************************************************************/
 
-#endif /* clock_tick.h */
+#endif /* token_gen.h */

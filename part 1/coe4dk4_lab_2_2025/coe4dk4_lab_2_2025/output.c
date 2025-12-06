@@ -78,8 +78,9 @@ output_results(Simulation_Run_Ptr simulation_run)
   double loss_rate = (double)data->dropped_count / data->arrival_count;
   double sim_time  = simulation_run_get_time(simulation_run);          /* seconds */
   double throughput_pps = data->number_of_packets_processed / sim_time;
+  double token_loss_rate = (double)data->lost_tokens_count / (data->lost_tokens_count + fifoqueue_size(data->token_buffer));
 
-  printf("%d, %.6f, %.6f, %.6f, %.6f\n", data->n, data->packet_xmt_time, data->clock_tick_period, throughput_pps, loss_rate);
+  printf("%d, %.6f, %.6f, %.6f\n", data->token_queue_size, throughput_pps, loss_rate, token_loss_rate);
 }
 
 
